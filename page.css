@@ -1,0 +1,53 @@
+body, html {
+    font-family: Arial;
+    background-color: white;
+    color: rgb(50,50,50);
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+}
+
+#wrapper {
+    width: 80%;
+    max-width: 800px;
+    border-left: 2px solid gray;
+    border-right: 2px solid gray;
+    border-radius: 1em;
+    padding: 1.5em;
+    margin: 0;
+
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+
+    position: absolute;
+    left: 50%;
+    top: 2em;
+    transform: translateX(-50%);
+
+}
+
+.package-link {
+    color: red;
+    font-weight: bold;
+    list-style-type: none;
+}
+
+#package_name {
+    color: black;
+}
+
+#package_desc {
+    position: relative;
+    left: 1em;
+    color: rgb(60,60,60);
+    font-weight: normal;
+    font-style: italic;
+    font-size: 1em;
+}
+
+#package_deps {
+    
+}
+
+#package_revd {
+    
+}
