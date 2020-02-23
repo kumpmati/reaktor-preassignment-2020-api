@@ -39,7 +39,7 @@ async function parseData() {
                         break;
                     case "Description:":
                         multiLine = true;
-                        currentPackage.Description = tokens.slice(1, tokens.length).join(" ");
+                        currentPackage.Description = tokens.slice(1, tokens.length).join(" ") + "<br>";
                         break;
                     case "Depends:":
                     case "Pre-Depends:":
@@ -50,11 +50,11 @@ async function parseData() {
                         break;
                 }
             } else {
-                if(line.includes("Original-Maintainer:")) {
+                if(line.includes("Original-Maintainer:") || line.includes("Homepage:")) {
                     multiLine = false;
                     return;
                 }
-                currentPackage.Description += line + "\n";
+                currentPackage.Description += line + "<br>";
             }
         });
 

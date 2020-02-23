@@ -1,22 +1,22 @@
 body, html {
     font-family: Arial;
-    background-color: white;
-    color: rgb(50,50,50);
+    background-color: rgb(240,240,240);
+    color: rgb(29, 29, 29);
     margin: 0;
     padding: 0;
     overflow-y: auto;
 }
 
 #wrapper {
+    background-color: white;
     width: 80%;
     max-width: 800px;
-    border-left: 2px solid gray;
-    border-right: 2px solid gray;
+    
     border-radius: .5em;
     padding: 1.5em;
     margin: 0;
 
-    box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.3);
 
     position: absolute;
     left: 50%;
@@ -25,28 +25,38 @@ body, html {
 
 }
 
+a {
+    text-decoration: none;
+    color: rgb(90,90,90);
+}
+a:hover {
+    color: rgb(7, 148, 141);
+}
+
 .package-link {
-    color: red;
     font-weight: bold;
     list-style-type: none;
+    margin-bottom: .2em;
 }
 
 #package_name {
-    color: black;
+    font-size: 2.5em;
 }
 
 #package_desc {
     position: relative;
     left: 1em;
-    color: rgb(60,60,60);
+    color: rgb(100,100,100);
     font-weight: normal;
     font-style: italic;
     font-size: 1em;
 }
 
 #backbutton {
-    display: block;
-    width: 5em;
+    display: inline-block;
+    width: auto;
+    padding-left: .75em;
+    padding-right: .75em;
     height: 2em;
     border: 1px solid lightgray;
     border-radius: .25em;
@@ -63,9 +73,5 @@ body, html {
 }
 #backbutton:active {
     color: black;
-    background-color: lightgray;
+    background-color: rgb(230, 230, 230);
 }
-
-#package_deps {}
-
-#package_revd {}

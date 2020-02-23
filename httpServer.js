@@ -3,11 +3,10 @@ const fs = require('fs');
 const parser = require('./fileParser');
 
 parser.parseData().then(() => {
-    server.listen(8080, () => console.log('server is up'));
+    server.listen(80, () => console.log('server is up'));
 });
 
 const server = http.createServer((req, res) => {
-    console.log(req.url);
     res.writeHead("200");
     res.end(handleRequest(req.url, res));
 });
@@ -17,9 +16,11 @@ function handleRequest(reqUrl, res) {
         case "/favicon.ico":
             break;
         default:
+            console.log(reqUrl);
             res.writeHead(200, {"Content-Type": "text/html"});
             return renderPage(reqUrl.substring(1, reqUrl.length));
         case "/page.css":
+            console.log("<page css>");
             res.writeHead(200, {"Content-Type": "text/css"});
             return fs.readFileSync("./page.css");
     }
@@ -30,21 +31,22 @@ function renderPage(packageName) {
     const p = parser.getPackage(packageName);
 
     if(!p) {
-        pBody += "<a id='backbutton' href='./'>Back</a>";
+        pBody += "<a id='backbutton' href='./'>Back to package view</a>";
         pBody += `<h1>404 - package \"${packageName}\" does not exist`;
     }
     //root with all packages
     else if(Array.isArray(p)) {
-        pBody += "<h1>Packages:</h1>";
+        pBody += "<div><h1>Packages:</h1><ul>";
         p.sort();
-        pBody += p.map(name => `<li class='package-link'><a href='${name}'>${name}</a></li>`).join("");
+        pBody += p.map(name => `<li class='package-link'><a href='${name}'>${name}</a></li>\n`).join("");
+        pBody += "</ul></div>";
     }
     else {
-        pBody += "<a id='backbutton' href='./'>Back</a>";
+        pBody += "<a id='backbutton' href='./'>Back to package view</a>";
         pBody += `<h1 id='package_name'>${p.Package}</h1>`;
-        pBody += `<h2 id='package_desc'>${p.Description}</h2>`;
-        pBody += `<div id='package_deps'><h2>Dependencies:</h2>${renderList(p.Dependencies)}</div>`;
-        pBody += `<div id='package_revd'><h2>Reverse Dependencies:</h2>${renderList(p.ReverseDependencies)}</div>`;
+        pBody += `<p id='package_desc'>${p.Description}</p>`;
+        pBody += `<div id='package_deps'><h3>Dependencies:</h3><ul>${renderList(p.Dependencies)}</ul></div>`;
+        pBody += `<div id='package_revd'><h3>Reverse Dependencies:</h3><ul>${renderList(p.ReverseDependencies)}</ul></div>`;
     }
     
     return (`
