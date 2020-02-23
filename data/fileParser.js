@@ -21,6 +21,7 @@ async function parseData() {
             //on empty line push current package to package list
             //and clear current package
             if(line === "") {
+                multiLine = false;
                 packages.push(currentPackage);
                 currentPackage = {
                     Package: "",
@@ -43,8 +44,9 @@ async function parseData() {
                         break;
                     case "Depends:":
                     case "Pre-Depends:":
-                        const names = stripVersionNumbers(tokens.slice(1, tokens.length));
-                        currentPackage.Dependencies = setDependencies(names);
+                        const dependencyStr = line.replace("Depends: ", "");
+                        const names = stripVersionNumbers(dependencyStr);
+                        currentPackage.Dependencies = names;   //note: this only sets the names, not the actual packages
                         break;
                     default:
                         break;
@@ -54,39 +56,41 @@ async function parseData() {
                     multiLine = false;
                     return;
                 }
-                currentPackage.Description += line + "<br>";
+                currentPackage.Description += line.trim() + "<br>";
             }
         });
-
         //called when end of file is reached
         rl.on('close', () => {
-            setReverseDependencies(packages);
+            setAllDependencies(packages);
             return Promise.resolve(packages);
         });
 }
 
-function stripVersionNumbers(arr) {
-    let nameArr = [];
-    for(const item of arr) {
-        if(!item.includes("(") && !item.includes(")")) {
-            nameArr.push(item);
-        }
-    }
-    return nameArr;
+function stripVersionNumbers(str) {
+    const cleanArr = str.replace(/ (?=\()(.*?)(?:\))/g, "").split(/\, |\ \|\ /);
+    return cleanArr;
 }
 
 function setDependencies(nameArr) {
     let dependencyArr = [];
     for(const name of nameArr) {
-        const dependency = packages.find(pkg => pkg.Package === name);
-        if(dependency) dependencyArr.push(dependency);
+        const dependency = packages.find(pkg => pkg.Package == name);
+        if(dependency !== undefined) {
+            dependencyArr.push(dependency);
+        } else {
+            dependencyArr.push(name);
+        }
+        
     }
     return dependencyArr;
 }
 
-function setReverseDependencies(arr) {
+function setAllDependencies(arr) {
     //iterate packages
     for(const _package of arr) {
+        //set dependencies
+        let deps = setDependencies(_package.Dependencies);
+        _package.Dependencies = deps;
         //iterate dependencies of a package
         for(const dependency of _package.Dependencies) {
             //find reverse dependency in list of packages based on dependency name
@@ -105,8 +109,7 @@ function setReverseDependencies(arr) {
 function getPackage(name) {
     if(!name) return getAllPackages();
     const singlePackage = packages.find(pkg => pkg.Package === name);
-    if(singlePackage) return singlePackage;
-    return undefined;
+    return singlePackage;
 }
 
 function getAllPackages() {

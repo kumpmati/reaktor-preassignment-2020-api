@@ -18,7 +18,7 @@ function handleRequest(reqUrl, res) {
         default:
             console.log(reqUrl);
             res.writeHead(200, {"Content-Type": "text/html"});
-            return renderPage(reqUrl.substring(1, reqUrl.length));
+            return renderPage(reqUrl.substring(1));
         case "/page.css":
             console.log("<page css>");
             res.writeHead(200, {"Content-Type": "text/css"});
@@ -29,26 +29,37 @@ function handleRequest(reqUrl, res) {
 function renderPage(packageName) {
     let pBody = "";
     const p = parser.getPackage(packageName);
-
     if(!p) {
         pBody += "<a id='backbutton' href='./'>Back to package view</a>";
         pBody += `<h1>404 - package \"${packageName}\" does not exist`;
     }
     //root with all packages
     else if(Array.isArray(p)) {
-        pBody += "<div><h1>Packages:</h1><ul>";
         p.sort();
-        pBody += p.map(name => `<li class='package-link'><a href='${name}'>${name}</a></li>\n`).join("");
-        pBody += "</ul></div>";
+        const list = p.map(name => `<li class='package-link'><a href='${name}'>${name}</a></li>\n`).join("");
+        pBody +=`<div>
+                    <h1>Packages:</h1>
+                    <ul>${list}</ul>
+                </div>`;
     }
     else {
-        pBody += "<a id='backbutton' href='./'>Back to package view</a>";
-        pBody += `<h1 id='package_name'>${p.Package}</h1>`;
-        pBody += `<p id='package_desc'>${p.Description}</p>`;
-        pBody += `<div id='package_deps'><h3>Dependencies:</h3><ul>${renderList(p.Dependencies)}</ul></div>`;
-        pBody += `<div id='package_revd'><h3>Reverse Dependencies:</h3><ul>${renderList(p.ReverseDependencies)}</ul></div>`;
+        //SINGLE PACKAGE VIEW
+        pBody +=    `<a id='backbutton' href='./'>Back to package view</a>
+                    <h1 id='package_name'>${p.Package}</h1>
+                    <p id='package_desc'>${p.Description}</p>
+
+                    <div id='package_deps'>
+                        <h3>Dependencies:</h3>
+                        <ul>${renderList(p.Dependencies)}</ul>
+                    </div>
+                    <div id='package_revd'>
+                        <h3>Reverse Dependencies:</h3>
+                        <ul>${renderList(p.ReverseDependencies)}</ul>
+                    </div>
+                    `;
     }
     
+    //final html page to return
     return (`
     <html>
     <link rel='stylesheet' type='text/css' href='page.css'>
@@ -63,9 +74,15 @@ function renderPage(packageName) {
 }
 
 function renderList(arr) {
-    if(!arr.length) {
-        return "<i>none</i>";
-    }
-    const body = arr.map(d => `<li class='package-link'><a href='./${d.Package}'>${d.Package}</a></li>`);
-    return body.join("");
+    if(!arr.length) return "<i>none</i>";
+    //map array of dependencies to HTML li-tags
+    //if array item is a string, show the name without a link
+    const body = arr.map(dependency => {
+        let item = (typeof(dependency) === "string") ?
+            `<p class='subtle'>${dependency}</p>` : //package that doesn't exist in the list
+            `<a href='./${dependency.Package}'>${dependency.Package}</a>`;  //existing package
+
+        return `<li class='package-link'>${item}</li>`
+    });
+    return body.join("");   //join the array into a string before returning
 }
