@@ -3,7 +3,7 @@ const fs = require('fs');
 const parser = require('./fileParser');
 
 parser.parseData().then(() => {
-    server.listen(80, () => console.log('server is up'));
+    server.listen(process.env.PORT || 80, () => console.log('server is up'));
 });
 
 const server = http.createServer((req, res) => {

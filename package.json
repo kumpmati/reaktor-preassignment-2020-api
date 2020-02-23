@@ -26,5 +26,8 @@
   "bugs": {
     "url": "https://github.com/kumpmati/reaktor-preassignment-2020/issues"
   },
-  "homepage": "https://github.com/kumpmati/reaktor-preassignment-2020#readme"
+  "homepage": "https://github.com/kumpmati/reaktor-preassignment-2020#readme",
+  "engines:": {
+    "node": "10.16.3"
+  }
 }
