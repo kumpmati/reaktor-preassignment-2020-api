@@ -43,7 +43,6 @@ async function parseData() {
                         currentPackage.Description = tokens.slice(1, tokens.length).join(" ");
                         break;
                     case "Depends:":
-                    case "Pre-Depends:":
                         const names = stripVersionNumbers(line.replace("Depends: ", ""));
                         currentPackage.Dependencies = names;   //note: this only sets the names, not the actual packages
                         break;
@@ -66,44 +65,43 @@ async function parseData() {
 }
 
 function stripVersionNumbers(str) {
-    const cleanArr = str.replace(/ (?=\()(.*?)(?:\))/g, "").split(/\, |\ \|\ /);
-    return cleanArr;
+    return str.replace(/ (?=\()(.*?)(?:\))/g, "").split(/\, |\ \|\ /);
 }
 
-function setDependencies(nameArr) {
+function setDependencies(p) {
     let dependencyArr = [];
-    for(const name of nameArr) {
+    for(const name of p.Dependencies) {
         const dependency = packages.find(pkg => pkg.Package == name);
         if(dependency !== undefined) {
             dependencyArr.push(dependency);
         } else {
             dependencyArr.push(name);
         }
-        
     }
-    return dependencyArr;
+    p.Dependencies = dependencyArr;
 }
 
 function setAllDependencies(arr) {
-    //iterate packages
-    for(const _package of arr) {
-        //set dependencies
-        let deps = setDependencies(_package.Dependencies);
-        _package.Dependencies = deps;
-        
-        //iterate dependencies of a package
-        for(const dependency of deps) {
-            //find reverse dependency in list of packages based on dependency name
-            const reverse_dependency = arr.find(pkg => pkg.Package === dependency.Package);
-            //if reverse dependency is found
-            if(reverse_dependency) {
-                //add current package to reverse dependencies of reverse dependency package
-                reverse_dependency.ReverseDependencies.push(_package);
-            }
+    for(const p of arr) {
+        setDependencies(p);
+    }
+    for(const p of arr) {
+        setReverseDependencies(p);
+    }
+}
+
+function setReverseDependencies(p) {
+    //iterate given array
+    for(const dependency of p.Dependencies) {
+        if(typeof(dependency) === "string") continue;
+        //find reverse dependency in list of packages based on dependency name
+        const reverse_dependency = packages.find(pkg => pkg.Package === dependency.Package);
+        //if reverse dependency is found
+        if(reverse_dependency) {
+            //add current package to reverse dependencies of reverse dependency package
+            reverse_dependency.ReverseDependencies.push(p);
         }
     }
-    //return modified array
-    return arr;
 }
 
 function getPackage(name) {
