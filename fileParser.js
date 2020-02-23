@@ -15,6 +15,8 @@ async function parseData() {
         let instream = fs.createReadStream('./status.real');
         let outstream = new stream();
         let rl = readline.createInterface(instream, outstream);
+
+        let multiLine = false;
         rl.on('line', line => {
             //on empty line push current package to package list
             //and clear current package
@@ -28,22 +30,31 @@ async function parseData() {
                 };
                 return;
             }
-
-            let tokens = line.split(" ");
-            switch(tokens[0]) {
-                case "Package:":
-                    currentPackage.Package = tokens[1];
-                    break;
-                case "Description:":
-                    currentPackage.Description = tokens.slice(1, tokens.length).join(" ");
-                    break;
-                case "Depends:":
-                case "Pre-Depends:":
-                    const names = stripVersionNumbers(tokens.slice(1, tokens.length));
-                    currentPackage.Dependencies = setDependencies(names);
-                    break;
-                default:
-                    break;
+            
+            if(!multiLine) {
+                let tokens = line.split(" ");
+                switch(tokens[0]) {
+                    case "Package:":
+                        currentPackage.Package = tokens[1];
+                        break;
+                    case "Description:":
+                        multiLine = true;
+                        currentPackage.Description = tokens.slice(1, tokens.length).join(" ");
+                        break;
+                    case "Depends:":
+                    case "Pre-Depends:":
+                        const names = stripVersionNumbers(tokens.slice(1, tokens.length));
+                        currentPackage.Dependencies = setDependencies(names);
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+                if(line.includes("Original-Maintainer:")) {
+                    multiLine = false;
+                    return;
+                }
+                currentPackage.Description += line + "\n";
             }
         });
 

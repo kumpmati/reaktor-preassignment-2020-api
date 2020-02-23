@@ -12,7 +12,7 @@ body, html {
     max-width: 800px;
     border-left: 2px solid gray;
     border-right: 2px solid gray;
-    border-radius: 1em;
+    border-radius: .5em;
     padding: 1.5em;
     margin: 0;
 
@@ -44,10 +44,28 @@ body, html {
     font-size: 1em;
 }
 
-#package_deps {
-    
+#backbutton {
+    display: block;
+    width: 5em;
+    height: 2em;
+    border: 1px solid lightgray;
+    border-radius: .25em;
+    text-align: center;
+    line-height: 2em;
+    text-decoration: none;
+    font-weight: bold;
+    transition: box-shadow .3s, color .3s;
+    color: rgb(100,100,100);
+}
+#backbutton:hover {
+    color: black;
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.2);
+}
+#backbutton:active {
+    color: black;
+    background-color: lightgray;
 }
 
-#package_revd {
-    
-}
+#package_deps {}
+
+#package_revd {}

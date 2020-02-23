@@ -30,15 +30,17 @@ function renderPage(packageName) {
     const p = parser.getPackage(packageName);
 
     if(!p) {
-        pBody += "<a href='./'>Back</a>";
+        pBody += "<a id='backbutton' href='./'>Back</a>";
         pBody += `<h1>404 - package \"${packageName}\" does not exist`;
     }
+    //root with all packages
     else if(Array.isArray(p)) {
         pBody += "<h1>Packages:</h1>";
+        p.sort();
         pBody += p.map(name => `<li class='package-link'><a href='${name}'>${name}</a></li>`).join("");
     }
     else {
-        pBody += "<a href='./'>Back</a>";
+        pBody += "<a id='backbutton' href='./'>Back</a>";
         pBody += `<h1 id='package_name'>${p.Package}</h1>`;
         pBody += `<h2 id='package_desc'>${p.Description}</h2>`;
         pBody += `<div id='package_deps'><h2>Dependencies:</h2>${renderList(p.Dependencies)}</div>`;
