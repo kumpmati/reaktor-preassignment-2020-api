@@ -44,8 +44,7 @@ async function parseData() {
                         break;
                     case "Depends:":
                     case "Pre-Depends:":
-                        const dependencyStr = line.replace("Depends: ", "");
-                        const names = stripVersionNumbers(dependencyStr);
+                        const names = stripVersionNumbers(line.replace("Depends: ", ""));
                         currentPackage.Dependencies = names;   //note: this only sets the names, not the actual packages
                         break;
                     default:
