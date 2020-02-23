@@ -52,6 +52,7 @@ function renderPage(packageName) {
     return (`
     <html>
     <link rel='stylesheet' type='text/css' href='page.css'>
+    <a href='https://github.com/kumpmati/reaktor-preassignment-2020'>GitHub</a>
     <body>
         <div id="wrapper">
             ${pBody}
