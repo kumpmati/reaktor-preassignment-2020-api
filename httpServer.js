@@ -1,6 +1,6 @@
 const http = require('http');
 const fs = require('fs');
-const parser = require('./fileParser');
+const parser = require('./data/fileParser');
 
 parser.parseData().then(() => {
     server.listen(process.env.PORT || 80, () => console.log('server is up'));
@@ -22,7 +22,7 @@ function handleRequest(reqUrl, res) {
         case "/page.css":
             console.log("<page css>");
             res.writeHead(200, {"Content-Type": "text/css"});
-            return fs.readFileSync("./page.css");
+            return fs.readFileSync("./data/page.css");
     }
 }
 
