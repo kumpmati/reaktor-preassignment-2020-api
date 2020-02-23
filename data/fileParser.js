@@ -40,7 +40,7 @@ async function parseData() {
                         break;
                     case "Description:":
                         multiLine = true;
-                        currentPackage.Description = tokens.slice(1, tokens.length).join(" ") + "<br>";
+                        currentPackage.Description = tokens.slice(1, tokens.length).join(" ");
                         break;
                     case "Depends:":
                     case "Pre-Depends:":
@@ -56,7 +56,7 @@ async function parseData() {
                     multiLine = false;
                     return;
                 }
-                currentPackage.Description += line.trim() + "<br>";
+                currentPackage.Description += line.trim();
             }
         });
         //called when end of file is reached
@@ -91,8 +91,9 @@ function setAllDependencies(arr) {
         //set dependencies
         let deps = setDependencies(_package.Dependencies);
         _package.Dependencies = deps;
+        
         //iterate dependencies of a package
-        for(const dependency of _package.Dependencies) {
+        for(const dependency of deps) {
             //find reverse dependency in list of packages based on dependency name
             const reverse_dependency = arr.find(pkg => pkg.Package === dependency.Package);
             //if reverse dependency is found
