@@ -1,6 +1,6 @@
 const http = require('http');
 const fs = require('fs');
-const parser = require('./api/fileParser');
+const parser = require('../fileParser');
 
 parser.parseData().then(() => {
     server.listen(process.env.PORT || 80, () => console.log('server is up'));
@@ -49,16 +49,16 @@ function renderPage(packageName) {
     else {
         //SINGLE PACKAGE VIEW
         pBody +=`<a id='backbutton' href='./'>Back to package view</a>
-                <h1 id='package_name'>${p.Package}</h1>
-                <p id='package_desc'>${p.Description}</p>
+                <h1 id='package_name'>${p.package}</h1>
+                <p id='package_desc'>${p.description.replace(/\n/gm, "<br>")}</p>
 
                 <div id='package_deps'>
                     <h3>Dependencies:</h3>
-                    <ul>${renderList(p.Dependencies)}</ul>
+                    <ul>${renderList(p.dependencies)}</ul>
                 </div>
                 <div id='package_revd'>
                     <h3>Reverse Dependencies:</h3>
-                    <ul>${renderList(p.ReverseDependencies)}</ul>
+                    <ul>${renderList(p.reverse_dependencies)}</ul>
                 </div>
                 `;
     }
@@ -82,10 +82,9 @@ function renderList(arr) {
     //map array of dependencies to HTML li-tags
     //if array item is a string, show the name without a link
     const body = arr.map(dependency => {
-        let item = (typeof(dependency) === "string") ?
-            `<p class='subtle'>${dependency}</p>` : //package that doesn't exist in the list
-            `<a href='./${dependency.Package}'>${dependency.Package}</a>`;  //existing package
-
+        let item = (dependency.not_indexed) ?
+            `<p class='subtle'>${dependency.name}</p>` : //package that doesn't exist in the list
+            `<a href='./${dependency.name}'>${dependency.name}</a>`;  //existing package
         return `<li class='package-link'>${item}</li>`
     });
     return body.join("");   //join the array into a string before returning

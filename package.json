@@ -9,7 +9,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node httpServer.js",
+    "start": "node apiServer.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/kumpmati/reaktor-preassignment-2020#readme",
   "engines:": {
+    "npm": "6.9.0",
     "node": "10.16.3"
   }
 }
