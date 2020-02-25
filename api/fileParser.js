@@ -12,7 +12,7 @@ var currentPackage = {
 };
 
 async function parseData() {
-        let instream = fs.createReadStream('./data/status.real');
+        let instream = fs.createReadStream('./api/status.real');
         let outstream = new stream();
         let rl = readline.createInterface(instream, outstream);
 
