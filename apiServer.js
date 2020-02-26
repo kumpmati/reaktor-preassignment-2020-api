@@ -5,8 +5,10 @@ const stringify = JSON.stringify.bind(this);
 
 const server = http.createServer(requestListener);
 
+const PORT = process.env.PORT | 9001;
+
 parseData().then(() => {
-    server.listen(process.env.PORT | 9001, () => console.log("API server is up"));
+    server.listen(PORT, () => console.log(`API server is up on port ${PORT}`));
 });
 
 function requestListener(req, res) {
