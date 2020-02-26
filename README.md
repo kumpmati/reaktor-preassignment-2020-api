@@ -14,6 +14,8 @@ Get all packages : `GET` `http://localhost:9001/api/`
 
 Get a package called 'at' : `GET` `http://localhost:9001/api/at`
 
-## [demo](https://reaktor-preassignment-backend.herokuapp.com/api/)
+### Run project: `npm start`
 
-### Run API server: `npm start`
+### [Frontend demo site](https://reaktor-preassignment-frontend.herokuapp.com/)
+### [Backend demo site](https://reaktor-preassignment-backend.herokuapp.com/api/)
+
