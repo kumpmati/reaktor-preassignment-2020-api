@@ -3,4 +3,4 @@
 a REST api created using NodeJS, that parses the `status.real`-file
 and exposes it in JSON format.
 
-Run: `npm start`
+### Run: `npm start`
