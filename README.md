@@ -15,6 +15,7 @@ Get all packages : `GET` `http://localhost:9001/api/`
 Get a package called 'at' : `GET` `http://localhost:9001/api/at`
 
 ### Run project: `npm start`
+**NOTE:** The server requires the environment variable `PORT` to be set to a port number that you want the server to listen to.
 
 ### [Frontend demo site](https://reaktor-preassignment-frontend.herokuapp.com/)
 ### [Backend demo site](https://reaktor-preassignment-backend.herokuapp.com/api/)
