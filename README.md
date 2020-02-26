@@ -1,6 +1,6 @@
-# Reaktor preassignment 2020
+# Reaktor preassignment 2020 backend
 
-A project that exposes the packages in the status.real file
-by creating a HTML interface using NodeJS.
+a REST api created using NodeJS, that parses the `status.real`-file
+and exposes it in JSON format.
 
 Run: `npm start`
