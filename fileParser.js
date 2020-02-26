@@ -22,22 +22,22 @@ async function parseData() {
     rl.on('line', line => {
         //on empty line push current package to package list
         //and clear current package
-        if(line === "") {
+        if (line === "") {
             multiLine = false;
             packages.push(package);
             package = shallowCopy(packageTemplate);
             return;
         }
-        
-        if(!multiLine) {
+
+        if (!multiLine) {
             let tokens = line.split(" ");
-            switch(tokens[0]) {
+            switch (tokens[0]) {
                 case "Package:":
                     package.package = tokens[1];
                     break;
                 case "Description:":
                     multiLine = true;
-                    package.description = tokens.slice(1, tokens.length).join(" ")+'\n';
+                    package.description = tokens.slice(1, tokens.length).join(" ") + '\n';
                     break;
                 case "Depends:":
                     const names = stripVersionNumbers(line.replace("Depends: ", ""));
@@ -47,11 +47,11 @@ async function parseData() {
                     break;
             }
         } else {
-            if(line.includes("Original-Maintainer:") || line.includes("Homepage:")) {
+            if (line.includes("Original-Maintainer:") || line.includes("Homepage:")) {
                 multiLine = false;
                 return;
             }
-            package.description += line.trim()+"\n";
+            package.description += line.trim() + "\n";
         }
     });
     //called when end of file is reached
@@ -63,30 +63,30 @@ async function parseData() {
 
 function validateDependencies(p) {
     let dependencyArr = [];
-    for(const name of p.dependencies) {
+    for (const name of p.dependencies) {
         const dependency = packages.find(pkg => pkg.package == name);
 
-        if(dependency) {
+        if (dependency) {
             //set dependency
-            dependencyArr.push({name: dependency.package});
+            dependencyArr.push({ name: dependency.package });
             //set reverse dependency
-            dependency.reverse_dependencies.push({name: p.package});
+            dependency.reverse_dependencies.push({ name: p.package });
         } else {
             //set non-indexed dependency
-            dependencyArr.push({name: name, not_indexed: true});
+            dependencyArr.push({ name: name, not_indexed: true });
         }
     }
     p.dependencies = dependencyArr;
 }
 
 function setAllDependencies(arr) {
-    for(const p of arr) {
+    for (const p of arr) {
         validateDependencies(p);
     }
 }
 
 function getPackage(name) {
-    if(name === "all" || !name) return getAllPackages();
+    if (!name) return getAllPackages();
     const singlePackage = packages.find(pkg => pkg.package === name);
     return singlePackage;
 }
